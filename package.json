@@ -1,0 +1,27 @@
+{
+  "name": "@musicorum/prestion",
+  "version": "1.0.0",
+  "description": "JavaScript framework for web presentations using canvas and THREE.js",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "webpack serve --open --progress --watch --config=webpack.config.js",
+    "build": "webpack"
+  },
+  "author": "Matheus <methidezeeni@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "babel-loader": "^8.2.2"
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie <= 9",
+    "last 2 versions"
+  ],
+  "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.12.7",
+    "gsap": "^3.5.1",
+    "preact": "^10.5.7"
+  }
+}
