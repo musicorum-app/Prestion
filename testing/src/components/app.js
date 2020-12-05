@@ -1,8 +1,8 @@
-import { h } from 'preact';
 import {useEffect, useState} from "preact/hooks";
 import { Prestion } from '../../../'
 
 import FirstSlide from "../slides/first";
+import SecondSlide from "../slides/second";
 
 const App = () => {
   const [prestion, setPrestion] = useState(null)
@@ -17,7 +17,8 @@ const App = () => {
       ]
     })
 
-    prst.addSlide(new FirstSlide())
+    prst.addSlide(new FirstSlide(prst))
+    prst.addSlide(new SecondSlide(prst))
     prst.preLoad()
       .then(() => prst.start())
 

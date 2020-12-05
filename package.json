@@ -12,7 +12,9 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.12.7",
-    "babel-loader": "^8.2.2"
+    "babel-loader": "^8.2.2",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.1.0"
   },
   "browserslist": [
     "> 1%",
@@ -21,6 +23,7 @@
   ],
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.12.7",
+    "chroma-js": "^2.1.0",
     "gsap": "^3.5.1",
     "preact": "^10.5.7"
   }

@@ -1,4 +1,5 @@
 import Utils from "./Utils";
+import PrestionGUI from "./gui";
 
 export default class PrestionEngine {
   constructor(element) {
@@ -6,6 +7,7 @@ export default class PrestionEngine {
     this.slides = []
     this.activeSlide = 0
     this.windowSize = Utils.getWindowSize()
+    this.valueStores = {}
   }
 
   preLoad() {
@@ -16,6 +18,8 @@ export default class PrestionEngine {
     for (const slide of this.slides) {
       slide.load()
     }
+
+    this.createGUI()
   }
 
   start () {
@@ -34,6 +38,10 @@ export default class PrestionEngine {
     return el
   }
 
+  createGUI() {
+    this.gui = new PrestionGUI(this.element, this)
+  }
+
   setupListeners() {
     window.addEventListener('resize', () => {
       const [w, h] = Utils.getWindowSize()
@@ -42,16 +50,34 @@ export default class PrestionEngine {
 
       this.windowSize = [w, h]
     })
+
+    window.addEventListener('wheel', ({ deltaY }) => {
+      if (deltaY === 0) return
+      if (deltaY > 0) this.nextSlide()
+      else this.prevSlide()
+    })
   }
 
   update(engine) {
     engine.slides[engine.activeSlide].update(engine.createContext())
 
+    this.gui.fpsGraph.update()
     window.requestAnimationFrame(() => engine.update(engine))
   }
 
   addSlide(slide) {
     this.slides.push(slide)
+  }
+
+  prevSlide() {
+
+  }
+
+  nextSlide() {
+    if (this.activeSlide === this.slides.length - 1) return
+    this.currentSlide.out(this.createContext())
+    this.activeSlide++
+    this.currentSlide.in(this.createContext())
   }
 
   createContext() {
@@ -60,5 +86,13 @@ export default class PrestionEngine {
       windowSize: this.windowSize,
       canvas: this.canvas
     }
+  }
+
+  defineStore(key, store) {
+    this.valueStores[key] = store
+  }
+
+  get currentSlide() {
+    return this.slides[this.activeSlide]
   }
 }

@@ -3,19 +3,31 @@ import {BlueColor, CrimsonColor, PurpleColor, SkyBlueColor} from "../Constants";
 import { gsap }  from 'gsap'
 
 export default class FirstSlide extends Slide {
-  constructor() {
-    super();
+  constructor(...v) {
+    super(...v);
 
     this.id = 'first'
     this.name = 'First Slide'
+
     this.state = {
-      textX: 0.5
+      textX: 0.5,
+      text: 'Teste 2'
     }
+
+    this.defineProperties({
+      textX: 'number',
+      text: 'string'
+    })
+
     this.timeline = this.createTimeline()
   }
 
   load() {
     this.createTitle()
+  }
+
+  onStateUpdate() {
+    this.load()
   }
 
   createTimeline() {
@@ -34,16 +46,19 @@ export default class FirstSlide extends Slide {
         ease: 'power4.out',
         duration: 1.6
       })
+      .to({}, {})
 
+    tl.repeat(-1)
     tl.pause()
     return tl
   }
 
   createTitle() {
+    this.state.text = this.state.text || '.'
     const c = document.createElement('canvas')
     const cx = c.getContext('2d')
     cx.font = '70px "Poppins SemiBold"'
-    const { width, actualBoundingBoxAscent } = cx.measureText('Teste Teste Teste 123 ')
+    const { width, actualBoundingBoxAscent } = cx.measureText(this.state.text)
     const canvas = document.createElement('canvas')
     canvas.width = width
     canvas.height = 70
@@ -51,7 +66,7 @@ export default class FirstSlide extends Slide {
     const ctx = canvas.getContext('2d')
     ctx.font = '70px "Poppins SemiBold"'
     ctx.fillStyle = CrimsonColor
-    ctx.fillText('Teste Teste Teste 123', 0,69)
+    ctx.fillText(this.state.text, 0,69)
     this.textCanvas = canvas
   }
 
