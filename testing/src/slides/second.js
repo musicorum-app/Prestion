@@ -79,9 +79,7 @@ export default class SecondSlide extends Slide {
       const x = i * boxWidth
       const y = Utils.convertRange(this.state[`bar${i}`], [0, 1], [this.copyCanvas.height, 0])
 
-
       ctx.drawImage(this.copyCanvas, x, this.copyCanvas.height - y, boxWidth, windowSize[1], x, 0, boxWidth, this.copyCanvas.height)
-
 
       ctx.fillStyle = TangerineColor
       ctx.fillRect(x - 2, y, boxWidth + 4, windowSize[1])

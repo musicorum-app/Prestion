@@ -2,30 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74f7c2c2-c6f9-4111-ab88-47d9bd44bfad" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ValuesStore.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/Graph.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/Styles.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/Box.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/Input.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/Metrics.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/PrestionGUIComponent.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/Section.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/Slide.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/types/NumberInput.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/components/types/StringInput.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gui/graphs/FPSGraph.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testing/src/slides/second.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PrestionEngine.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/PrestionEngine.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Slide.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Slide.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testing/src/Constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/testing/src/Constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testing/src/components/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/testing/src/components/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testing/src/slides/first.js" beforeDir="false" afterPath="$PROJECT_DIR$/testing/src/slides/first.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testing/src/slides/second.js" beforeDir="false" afterPath="$PROJECT_DIR$/testing/src/slides/second.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +30,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/testing/src/slides" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../rewind" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -98,7 +76,10 @@
       <updated>1607058281749</updated>
       <workItem from="1607058282970" duration="1779000" />
       <workItem from="1607087895894" duration="20569000" />
-      <workItem from="1607113429284" duration="18869000" />
+      <workItem from="1607113429284" duration="19631000" />
+      <workItem from="1607138267321" duration="662000" />
+      <workItem from="1607143174221" duration="935000" />
+      <workItem from="1607200232182" duration="62000" />
     </task>
     <task id="LOCAL-00001" summary="Initial work">
       <created>1607113512037</created>
@@ -107,7 +88,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607113512037</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="more stuff">
+      <created>1607137332826</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1607137332826</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -123,10 +111,12 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial work" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial work" />
+    <MESSAGE value="more stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="more stuff" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
