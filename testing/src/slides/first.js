@@ -1,10 +1,13 @@
-import { Slide } from '../../../'
 import {BlueColor, CrimsonColor, PurpleColor, SkyBlueColor} from "../Constants";
 import { gsap }  from 'gsap'
+import {Slide} from "@musicorum/prestion";
 
 export default class FirstSlide extends Slide {
-  constructor(...v) {
-    super(...v);
+  constructor(v) {
+    super(v, {
+      id: 'First',
+      name: 'First Slide'
+    });
 
     this.id = 'first'
     this.name = 'First Slide'

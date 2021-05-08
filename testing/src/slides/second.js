@@ -1,4 +1,4 @@
-import { Slide } from '../../../'
+import {Slide} from "@musicorum/prestion";
 import {BlueColor, CrimsonColor, PurpleColor, SienaColor, SkyBlueColor, TangerineColor} from "../Constants";
 import { gsap }  from 'gsap'
 import Utils from "../../../src/Utils";
@@ -32,7 +32,21 @@ export default class SecondSlide extends Slide {
 
   in({ canvas }) {
     this.createCopy(canvas)
-    this.timeline.resume()
+    // this.timeline.resume()
+  }
+
+  createInTimeline () {
+    const tl = gsap.timeline()
+
+    for (let i = 0; i < 6; i++) {
+      tl.to(this.state, {
+        [`bar${i}`]: 1,
+        duration: 1.9,
+        ease: 'expo.inOut',
+      }, (i * .12))
+    }
+
+    return tl
   }
 
   onStateUpdate() {
@@ -40,20 +54,7 @@ export default class SecondSlide extends Slide {
   }
 
   createTimeline() {
-    const tl = gsap.timeline()
 
-
-    for (let i = 0; i < 6; i++) {
-      tl.to(this.state, {
-        [`bar${i}`]: 1,
-        duration: 1.9,
-        ease: 'expo.inOut'
-      }, (i * .12))
-    }
-
-
-    tl.pause()
-    return tl
   }
 
   createCopy(canvas) {

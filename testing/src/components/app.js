@@ -1,26 +1,23 @@
 import {useEffect, useState} from "preact/hooks";
-import { Prestion } from '../../../'
 
 import FirstSlide from "../slides/first";
 import SecondSlide from "../slides/second";
+import PrestionExampleProject from "../PrestionExampleProject";
 
 const App = () => {
   const [prestion, setPrestion] = useState(null)
 
   useEffect(() => {
-    const prst = new Prestion('#prestion', {
-      fonts: [
-        {
-          name: 'Poppins SemiBold',
-          url: '/assets/fonts/Poppins-SemiBold.ttf'
-        }
-      ]
-    })
+    const prst = new PrestionExampleProject()
 
     prst.addSlide(new FirstSlide(prst))
-    prst.addSlide(new SecondSlide(prst))
-    prst.preLoad()
-      .then(() => prst.start())
+    // prst.addSlide(new SecondSlide(prst))
+    // prst.preLoad()
+    //   .then(() => prst.start())
+
+    prst.init()
+
+    window.Prestion = prst
 
     setPrestion(prst)
   }, [])

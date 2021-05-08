@@ -14,7 +14,7 @@ const Slide = ({gui}) => {
     setInterval(() => {
       setUpdate(performance.now())
       setStore(gui.prestion.valueStores[gui.prestion.currentSlide.id])
-    }, 100)
+    }, 50)
   }, [])
 
   const changeValue = (name) => (event) => {
@@ -22,12 +22,7 @@ const Slide = ({gui}) => {
     store.slide.onStateUpdate()
   }
 
-  return <Box minWidth={400}>
-    <Section
-      title="Slide"
-    >
-      <Text>{gui.prestion.currentSlide.name}</Text>
-    </Section>
+  return <Box minWidth={320}>
     <Section
       title="Values"
     >

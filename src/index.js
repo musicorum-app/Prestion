@@ -1,7 +1,9 @@
-import Prestion from './Prestion'
+import PrestionProject from './PrestionProject'
 import Slide from './Slide'
+import Utils from './Utils'
 
 export {
-  Prestion,
-  Slide
+  PrestionProject,
+  Slide,
+  Utils
 }

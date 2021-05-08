@@ -1,8 +1,13 @@
 import ValuesStore from "./ValuesStore";
 
 export default class Slide {
-  constructor(prestion) {
-    this.id = null
+  constructor(prestion, {
+    id,
+    name
+  }) {
+    this.id = id
+    this.name = name
+    this.project = prestion
     this.engine = prestion.engine
   }
 
@@ -34,4 +39,8 @@ export default class Slide {
   in() {}
 
   out() {}
+
+  createInTimeline () {}
+
+  createOutTimeline () {}
 }

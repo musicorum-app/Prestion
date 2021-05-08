@@ -2,6 +2,7 @@ import {GUI_BACKGROUND, GUI_BORDER} from "../Styles";
 import Box from "./Box";
 import Metrics from "./Metrics";
 import Slide from "./Slide";
+import Timeline from "./Timeline";
 
 const PrestionGUIComponent = ({gui}) => {
   return (
@@ -12,8 +13,10 @@ const PrestionGUIComponent = ({gui}) => {
       color: 'white',
       display: 'flex',
       width: '100%',
+      height: '100%',
       justifyContent: 'space-between',
-      alignItems: 'start',
+      alignItems: 'center',
+      flexDirection: 'column',
       fontFamily: "'Poppins', sans-serif"
     }}>
       <link rel="preconnect" href="https://fonts.gstatic.com"/>
@@ -22,19 +25,27 @@ const PrestionGUIComponent = ({gui}) => {
 
       <style>{`
       .prestion_input:hover {
-          border: 2px solid rgba(255, 255, 255, .27) !important;
+          background: rgba(255, 255, 255, .13) !important;
         }
         
         .prestion_input:focus {
         outline: none;
-          border: 2px solid rgba(255, 255, 255, .53) !important;
+          background: rgba(255, 255, 255, .15) !important;
         }
       `}</style>
 
-      <Metrics gui={gui}/>
+      <div style={{
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'start',
 
-      <Slide gui={gui}/>
+      }}>
+        <Metrics gui={gui}/>
 
+        <Slide gui={gui}/>
+      </div>
+      <Timeline gui={gui}/>
     </div>
   )
 }

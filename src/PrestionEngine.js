@@ -1,17 +1,19 @@
 import Utils from "./Utils";
 import PrestionGUI from "./gui";
+import { gsap }  from 'gsap'
 
 export default class PrestionEngine {
-  constructor(element) {
-    this.element = element
+  constructor(project) {
+    this.project = project
+    this.element = project.element
     this.slides = []
     this.activeSlide = 0
     this.windowSize = Utils.getWindowSize()
     this.valueStores = {}
+    this.transitioning = false
   }
 
   preLoad() {
-    this.canvas = this.createCanvas()
     this.setupListeners()
     this.element.appendChild(this.canvas)
 
@@ -29,14 +31,6 @@ export default class PrestionEngine {
     }, 700)
   }
 
-  createCanvas() {
-    const el = document.createElement('canvas')
-    const [w, h] = Utils.getWindowSize()
-    el.width = w
-    el.height = h
-
-    return el
-  }
 
   createGUI() {
     this.gui = new PrestionGUI(this.element, this)
@@ -44,11 +38,7 @@ export default class PrestionEngine {
 
   setupListeners() {
     window.addEventListener('resize', () => {
-      const [w, h] = Utils.getWindowSize()
-      this.canvas.width = w
-      this.canvas.height = h
-
-      this.windowSize = [w, h]
+      this.project.onWindowResize()
     })
 
     window.addEventListener('wheel', ({ deltaY }) => {
@@ -74,10 +64,31 @@ export default class PrestionEngine {
   }
 
   nextSlide() {
+    if (this.transitioning) return
     if (this.activeSlide === this.slides.length - 1) return
+
+    this.transitioning = true
+
     this.currentSlide.out(this.createContext())
-    this.activeSlide++
-    this.currentSlide.in(this.createContext())
+
+    const outTl = this.currentSlide.createOutTimeline() || gsap.timeline()
+    const inTl = this.slides[this.activeSlide + 1].createInTimeline() || gsap.timeline()
+
+    outTl.to({}, {
+      onComplete: () => {
+        this.activeSlide++
+        this.currentSlide.in(this.createContext())
+      }
+    })
+    outTl.add(inTl)
+
+    outTl.play(0)
+    outTl.resume(0)
+    console.log(outTl)
+    outTl.eventCallback('onComplete', () => {
+      this.transitioning = false
+      console.log('Transition done')
+    })
   }
 
   createContext() {

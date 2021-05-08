@@ -10,8 +10,8 @@ const Section = forwardRef(({title, children}, ref) => {
         textTransform: 'uppercase'
       }}>{title}</span>
       <div style={{
-        marginLeft: 16,
-        marginTop: 7,
+        marginLeft: 8,
+        marginTop: 2,
         display: 'flex',
         flexDirection: 'column'
       }} ref={ref}>
