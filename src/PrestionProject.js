@@ -13,14 +13,23 @@ export default class PrestionProject {
 
     this.engine = new PrestionEngine(this)
     this.loader = new ResourcesLoader(this)
+
+    this.init()
   }
 
   async load () {
-    await this.preLoad()
-    return this.loader.load()
+    this.preLoad()
+    console.log(2)
+    await this.loader.load()
+    this.postLoad()
   }
 
-  async preLoad() {
+  postLoad() {
+    console.log(23)
+    this.engine.postLoad()
+  }
+
+  preLoad() {
 
   }
 
@@ -33,7 +42,7 @@ export default class PrestionProject {
   }
 
   init () {
-
+    this.engine.init()
   }
 
   async loadFonts() {
@@ -50,5 +59,9 @@ export default class PrestionProject {
         this.engine.addSlide(slide)
       }
     }
+  }
+
+  update () {
+
   }
 }

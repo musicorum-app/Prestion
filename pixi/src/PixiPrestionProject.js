@@ -11,6 +11,8 @@ export default class PixiPrestionProject extends PrestionProject {
       height: window.innerHeight
     })
 
+    this.app.ticker.stop()
+
     this.content = new PIXI.Container
     this.content.name = 'Content'
 
@@ -38,5 +40,9 @@ export default class PixiPrestionProject extends PrestionProject {
         resolve()
       })
     }))
+  }
+
+  update() {
+    this.app.ticker.update()
   }
 }

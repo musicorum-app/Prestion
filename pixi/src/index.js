@@ -1,5 +1,7 @@
 import PixiPrestionProject from "./PixiPrestionProject";
+import PixiSlide from "./PixiSlide";
 
 export {
-  PixiPrestionProject
+  PixiPrestionProject,
+  PixiSlide
 }

@@ -1,4 +1,5 @@
 import {Slide} from "@musicorum/prestion";
+import * as PIXI from 'pixi.js'
 
 export default class PixiSlide extends Slide {
   constructor(...p) {

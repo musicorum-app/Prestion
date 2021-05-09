@@ -12,10 +12,9 @@ const App = () => {
 
     prst.addSlide(new FirstSlide(prst))
     // prst.addSlide(new SecondSlide(prst))
-    // prst.preLoad()
-    //   .then(() => prst.start())
+    prst.load()
+      .then(() => prst.start())
 
-    prst.init()
 
     window.Prestion = prst
 

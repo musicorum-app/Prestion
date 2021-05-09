@@ -12,6 +12,8 @@ export default class PrestionExampleProject extends PixiPrestionProject {
   init() {
     super.init();
 
+    console.log(this)
+
     this.loader.addFont({
       name: 'Poppins SemiBold',
       url: '/assets/fonts/Poppins-SemiBold.ttf'

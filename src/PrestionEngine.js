@@ -13,15 +13,23 @@ export default class PrestionEngine {
     this.transitioning = false
   }
 
-  preLoad() {
+  init() {
     this.setupListeners()
-    this.element.appendChild(this.canvas)
+    // this.element.appendChild(this.canvas)
 
+      console.log(this.slides)
     for (const slide of this.slides) {
       slide.load()
     }
 
-    this.createGUI()
+    // this.createGUI()
+  }
+
+  postLoad () {
+    for (const slide of this.slides) {
+      console.log(slide)
+      slide.postLoad()
+    }
   }
 
   start () {
@@ -49,9 +57,10 @@ export default class PrestionEngine {
   }
 
   update(engine) {
+    this.project.update()
     engine.slides[engine.activeSlide].update(engine.createContext())
 
-    this.gui.fpsGraph.update()
+    // this.gui.fpsGraph.update()
     window.requestAnimationFrame(() => engine.update(engine))
   }
 

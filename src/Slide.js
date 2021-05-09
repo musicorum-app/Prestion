@@ -15,6 +15,10 @@ export default class Slide {
 
   }
 
+  postLoad() {
+
+  }
+
   start() {
 
   }
