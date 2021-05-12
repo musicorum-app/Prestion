@@ -3,12 +3,14 @@ import Section from "./Section";
 import {useEffect, useRef, useState} from "preact/hooks";
 import StringInput from "./types/StringInput";
 import NumberInput from "./types/NumberInput";
+import ColorInput from "./types/ColorInput";
 
 const Text = ({children}) => <span>{children}</span>
 
 const Slide = ({gui}) => {
   const [store, setStore] = useState(null)
   const [update, setUpdate] = useState(0)
+
 
   useEffect(() => {
     setInterval(() => {
@@ -37,6 +39,13 @@ const Slide = ({gui}) => {
           }
           if (type === 'number') {
             return <NumberInput
+              name={name}
+              value={store.slide.state[name]}
+              onChange={changeValue(name)}
+            />
+          }
+          if (type === 'color') {
+            return <ColorInput
               name={name}
               value={store.slide.state[name]}
               onChange={changeValue(name)}

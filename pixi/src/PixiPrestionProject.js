@@ -11,6 +11,8 @@ export default class PixiPrestionProject extends PrestionProject {
       height: window.innerHeight
     })
 
+    // this.app.ticker.maxFPS = 144
+
     this.app.ticker.stop()
 
     this.content = new PIXI.Container

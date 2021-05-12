@@ -27,6 +27,8 @@ export default class Slide {
 
   }
 
+  onWindowResize() {}
+
   getCenter([w, h], {width, height}) {
     return [(w / 2) - (width / 2), (h / 2) - (height / 2)]
   }

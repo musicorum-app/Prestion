@@ -1,5 +1,5 @@
 import {BlueColor, CrimsonColor, PurpleColor, SkyBlueColor} from "../Constants";
-import { gsap }  from 'gsap'
+import {gsap} from 'gsap'
 import {Slide, Utils} from "@musicorum/prestion";
 import {PixiSlide} from "@musicorum/prestion-pixi";
 import * as PIXI from 'pixi.js'
@@ -12,32 +12,44 @@ export default class FirstSlide extends PixiSlide {
     })
 
     this.state = {
-      textX: 0.5,
-      text: 'Teste 2',
+      text: 'Example text',
       grad1: '#F37724',
       grad2: '#AD0A0A'
     }
 
     this.defineProperties({
-      textX: 'number',
-      text: 'string'
+      text: 'string',
+      grad1: 'color',
+      grad2: 'color'
     })
 
     this.timeline = this.createTimeline()
+
+    this.items = {}
+
+    this.gradientCanvas = document.createElement('canvas')
   }
 
   postLoad() {
     const bg = new PIXI.Sprite(PIXI.Texture.from(this.createGradient()))
     this.stage.addChild(bg)
 
-    const text = new PIXI.Text('Powered by', new PIXI.TextStyle({
+    const textContainer = new PIXI.Container()
+
+    const text = new PIXI.Text(this.state.text, new PIXI.TextStyle({
       fill: 0xffffff,
       fontFamily: 'Poppins'
     }))
     text.anchor.set(0.5, 0.5)
-    text.x = Utils.getWindowSize()[0] / 2
-    text.y = Utils.getWindowSize()[1] / 2
-    this.stage.addChild(text)
+    textContainer.x = Utils.getWindowSize()[0] / 2
+    textContainer.y = Utils.getWindowSize()[1] / 2
+    textContainer.addChild(text)
+    this.stage.addChild(textContainer)
+
+    this.items.bg = bg
+    this.items.text = textContainer
+    this.items.textItem = text
+
 
     gsap.from(text, {
       y: '+=30',
@@ -53,43 +65,54 @@ export default class FirstSlide extends PixiSlide {
       grad2: '#29508B',
       delay: 2,
       duration: .4,
+      // repeat: -1,
+      repeatDelay: 2,
+      yoyo: true,
       ease: 'linear',
       onUpdate: () => {
-        bg.texture = PIXI.Texture.from(this.createGradient())
+        this.items.textItem.text = this.state.text
+        this.items.bg.texture.destroy(true)
+        PIXI.Texture.removeFromCache(this.items.bg.texture)
+
+        this.items.bg.texture = PIXI.Texture.from(this.createGradient())
       }
     })
 
   }
 
   onStateUpdate() {
-    this.load()
+    this.items.textItem.text = this.state.text
+    this.items.bg.texture.destroy(true)
+    PIXI.Texture.removeFromCache(this.items.bg.texture)
+
+    this.items.bg.texture = PIXI.Texture.from(this.createGradient())
   }
 
   createTimeline() {
     const tl = gsap.timeline()
-      .to(this.state, {
-        textX: 1.5,
-        ease: 'power4.in',
-        duration: 1.6
-      })
-      .to(this.state, {
-        textX: -0.5,
-        duration: 0
-      })
-      .to(this.state, {
-        textX: 0.5,
-        ease: 'power4.out',
-        duration: 1.6
-      })
-      .to({}, {})
-
-    tl.repeat(-1)
-    tl.pause()
+    //   .to(this.state, {
+    //     textX: 1.5,
+    //     ease: 'power4.in',
+    //     duration: 1.6
+    //   })
+    //   .to(this.state, {
+    //     textX: -0.5,
+    //     duration: 0
+    //   })
+    //   .to(this.state, {
+    //     textX: 0.5,
+    //     ease: 'power4.out',
+    //     duration: 1.6
+    //   })
+    //   .to({}, {})
+    //
+    // tl.repeat(-1)
+    // tl.pause()
     return tl
   }
 
-  createGradient () {
-    const c = document.createElement('canvas')
+  createGradient() {
+    const c = this.gradientCanvas
     const [w, h] = Utils.getWindowSize()
     c.width = w
     c.height = h
@@ -106,12 +129,26 @@ export default class FirstSlide extends PixiSlide {
     return c
   }
 
+  onWindowResize() {
+    this.items.textItem.text = this.state.text
+    this.items.bg.texture.destroy(true)
+    PIXI.Texture.removeFromCache(this.items.bg.texture)
+
+    this.items.bg.texture = PIXI.Texture.from(this.createGradient())
+
+    const [w, h] = Utils.getWindowSize()
+    const textContainer = this.items.text
+
+    textContainer.x = w / 2
+    textContainer.y = h / 2
+  }
+
   createTitle() {
     this.state.text = this.state.text || '.'
     const c = document.createElement('canvas')
     const cx = c.getContext('2d')
     cx.font = '70px "Poppins SemiBold"'
-    const { width, actualBoundingBoxAscent } = cx.measureText(this.state.text)
+    const {width, actualBoundingBoxAscent} = cx.measureText(this.state.text)
     const canvas = document.createElement('canvas')
     canvas.width = width
     canvas.height = 70
@@ -119,11 +156,11 @@ export default class FirstSlide extends PixiSlide {
     const ctx = canvas.getContext('2d')
     ctx.font = '70px "Poppins SemiBold"'
     ctx.fillStyle = CrimsonColor
-    ctx.fillText(this.state.text, 0,69)
+    ctx.fillText(this.state.text, 0, 69)
     this.textCanvas = canvas
   }
 
-  update({ canvas, windowSize }) {
+  update({canvas, windowSize}) {
     // const ctx = canvas.getContext('2d')
     // ctx.fillStyle = PurpleColor
     // ctx.fillRect(0, 0, windowSize[0], windowSize[1])

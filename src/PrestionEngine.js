@@ -21,8 +21,6 @@ export default class PrestionEngine {
     for (const slide of this.slides) {
       slide.load()
     }
-
-    // this.createGUI()
   }
 
   postLoad () {
@@ -30,6 +28,8 @@ export default class PrestionEngine {
       console.log(slide)
       slide.postLoad()
     }
+
+    this.createGUI()
   }
 
   start () {
@@ -47,6 +47,9 @@ export default class PrestionEngine {
   setupListeners() {
     window.addEventListener('resize', () => {
       this.project.onWindowResize()
+      for (const slide of this.slides) {
+        slide.onWindowResize()
+      }
     })
 
     window.addEventListener('wheel', ({ deltaY }) => {
@@ -60,7 +63,7 @@ export default class PrestionEngine {
     this.project.update()
     engine.slides[engine.activeSlide].update(engine.createContext())
 
-    // this.gui.fpsGraph.update()
+    this.gui.fpsGraph.update()
     window.requestAnimationFrame(() => engine.update(engine))
   }
 
