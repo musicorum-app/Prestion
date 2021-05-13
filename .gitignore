@@ -3,3 +3,7 @@ node_modules/
 testing/node_modules
 .netlify
 .idea
+*size-plugin.json
+dist
+build
+discord.xml
