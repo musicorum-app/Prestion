@@ -1,0 +1,27 @@
+{
+  "name": "@musicorum/prestion",
+  "version": "2.0.0",
+  "description": "Javascript framework for web presentations using PixiJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/musicorum-app/Prestion.git"
+  },
+  "author": "Matheus <methidezeeni@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/musicorum-app/Prestion/issues"
+  },
+  "homepage": "https://github.com/musicorum-app/Prestion#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/preset-env": "^7.14.7"
+  },
+  "dependencies": {
+    "gsap": "^3.7.1",
+    "pixi.js": "^6.0.4"
+  }
+}

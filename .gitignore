@@ -1,5 +1,5 @@
 dist/
-node_modules/
+*node_modules/
 testing/node_modules
 .netlify
 .idea
