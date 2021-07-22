@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 
 export default class Slide {
-  constructor(prestion, config) {
+  constructor({prestion, index}, config) {
     this.engine = prestion
     this._config = config
 
@@ -9,13 +9,26 @@ export default class Slide {
     this.stage.name = `Slide - ${config.id}`
 
     this.visible = false
+    this.index = index
+    this.state = {}
+
+    this._stateTypes = {}
   }
 
   /**
    * Event triggered on the initialization of the project.
    */
   onPreLoad () {
+    this._state = this.state
+    const that = this
 
+    this.state = new Proxy(this._state, {
+      set: (target, p, value) => {
+        this.engine.onStateUpdate(that)
+        target[p] = value
+        return true
+      }
+    })
   }
 
   /**
@@ -31,6 +44,11 @@ export default class Slide {
    */
   onPostLoad() {
 
+  }
+
+  _onStateUpdate() {
+    this.onStateUpdate()
+    this.engine.onStateUpdate(this)
   }
 
   /**
@@ -69,23 +87,21 @@ export default class Slide {
   /**
    * TODO
    * @param {GSAPTimeline} tl
-   * @param {Function} finish
    */
-  createStartTimeline (tl, finish) {
+  createStartTimeline (tl) {
 
   }
 
   /**
    * TODO
    * @param {GSAPTimeline} tl
-   * @param {Function} finish
    */
-  createEndTimeline (tl, finish) {
+  createEndTimeline (tl) {
 
   }
 
-  defineStateTypes() {
-
+  defineStateTypes(types) {
+    this._stateTypes = types
   }
 
   get visible () {

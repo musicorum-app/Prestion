@@ -1,0 +1,25 @@
+{
+  "name": "@musicorum/prestion-tools",
+  "version": "2.0.0",
+  "description": "The Prestion's library dev tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/musicorum-app/Prestion.git"
+  },
+  "author": "Matheus <methidezeeni@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/musicorum-app/Prestion/issues"
+  },
+  "homepage": "https://github.com/musicorum-app/Prestion#readme",
+  "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.14.5",
+    "@musicorum/prestion": "file://../prestion",
+    "@simonwep/pickr": "^1.8.1",
+    "preact": "^10.5.14"
+  }
+}

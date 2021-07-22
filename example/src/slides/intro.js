@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import {Slide} from "@musicorum/prestion";
 import {getWindowSize} from "@musicorum/prestion/utils";
+import chroma from "chroma-js";
 
 export default class IntroSlide extends Slide {
   constructor(p) {
@@ -11,7 +12,7 @@ export default class IntroSlide extends Slide {
 
     this.state = {
       title: 'Prestion example',
-      backgroundColor: '#ff0'
+      backgroundColor: '#26dce2'
     }
 
     this.defineStateTypes({
@@ -26,14 +27,12 @@ export default class IntroSlide extends Slide {
 
   onPostLoad() {
     const bg = new PIXI.Graphics()
-      .beginFill(0x26dce2)
-      .drawRect(0, 0, ...getWindowSize())
-      .endFill()
+
 
     this.stage.addChild(bg)
 
 
-    const txt = new PIXI.Text('teste', new PIXI.TextStyle({
+    const txt = new PIXI.Text(this.state.title, new PIXI.TextStyle({
       fill: 0,
       fontSize: 40
     }))
@@ -46,28 +45,41 @@ export default class IntroSlide extends Slide {
       txt,
       bg
     }
+    this.updateBgColor()
   }
 
   onWindowResize(width, height) {
-    this.items.bg.beginFill(0x26dce2)
+    this.updateBgColor()
+  }
+
+  createStartTimeline(tl) {
+    tl.fromTo(this.items.txt, {
+      alpha: 0,
+      x: 300,
+      y: 200
+    },{
+      alpha: 1,
+      x: '620',
+      y: '500',
+      duration: 1.3,
+      onStart: () => console.log('str')
+    })
+  }
+
+  updateBgColor() {
+    const [width, height] = getWindowSize()
+    this.items.bg.clear()
+      .beginFill(chroma(this.state.backgroundColor).num())
       .drawRect(0, 0, width, height)
       .endFill()
   }
 
-  createStartTimeline(tl, finish) {
-    tl.to(this.items.txt, {
-      alpha: 1,
-      y: '+=200',
-      x: '+=320',
-      duration: 1.3,
-      onComplete: () => finish()
-    })
-
-    return tl
+  createEndTimeline(tl) {
+    console.log('end')
   }
 
-  createEndTimeline(tl, finish) {
-    console.log('end')
-    finish()
+  onStateUpdate() {
+    this.updateBgColor()
+    this.items.txt.text = this.state.title
   }
 }

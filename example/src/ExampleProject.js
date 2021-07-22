@@ -1,6 +1,7 @@
 import {PrestionProject} from "@musicorum/prestion";
 import IntroSlide from "./slides/intro";
 import TestSlide from "./slides/test";
+import {PrestionTools} from "@musicorum/prestion-tools";
 
 export default class ExampleProject extends PrestionProject {
   constructor() {
@@ -10,7 +11,10 @@ export default class ExampleProject extends PrestionProject {
         IntroSlide,
         TestSlide
       ],
-      element: '#prestion'
+      plugins: [
+        PrestionTools
+      ],
+      element: '.prestion'
     })
   }
 }

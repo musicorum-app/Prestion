@@ -8,4 +8,11 @@ module.exports = {
       PIXI: 'pixi.js'
     })
   ],
+
+  "resolve": {
+    "alias": {
+      "react": "preact-compat",
+      "react-dom": "preact-compat"
+    }
+  }
 };

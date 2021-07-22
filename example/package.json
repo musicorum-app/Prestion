@@ -4,9 +4,12 @@
   "private": true,
   "dependencies": {
     "@musicorum/prestion": "file://../src/prestion/",
+    "@musicorum/prestion-tools": "file://../src/tools/",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "@types/chroma-js": "^2.1.3",
+    "chroma-js": "^2.1.2",
     "gsap": "^3.7.1",
     "pixi.js": "^6.0.4",
     "react": "^17.0.2",

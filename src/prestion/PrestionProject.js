@@ -18,16 +18,39 @@ export default class PrestionProject {
     this.resources = null
 
     this.slides = []
+    this.plugins = new Map()
 
     this._currentSlide = 0
     this._canMove = false
 
+    this.initPlugins()
     this.initSlides()
   }
 
   /* Getters 'n stuff */
+
+  /**
+   * The current active slide
+   * @returns {Slide}
+   */
   get currentSlide() {
     return this.slides[this._currentSlide]
+  }
+
+  /**
+   * The previous slide referring to the current, or undefined
+   * @returns {Slide|undefined}
+   */
+  get previusSlide () {
+    return this.slides[this._currentSlide - 1]
+  }
+
+  /**
+   * The next slide referring to the current, or undefined
+   * @returns {Slide|undefined}
+   */
+  get nextSlide () {
+    return this.slides[this._currentSlide + 1]
   }
 
   get canMove() {
@@ -46,7 +69,19 @@ export default class PrestionProject {
    * @param {boolean} value
    */
   onCanMoveValueChange(value) {
+    for (const plugin of this.plugins.values()) {
+      plugin.onCanMoveValueChange(value)
+    }
+  }
 
+  /**
+   *
+   * @param {Slide} slide
+   */
+  onStateUpdate (slide) {
+    for (const plugin of this.plugins.values()) {
+      plugin.onStateUpdate(slide)
+    }
   }
 
   /**
@@ -63,15 +98,33 @@ export default class PrestionProject {
 
   /* Methods */
   initSlides() {
-    for (const Slide of this.config.slides) {
-      const slide = new Slide(this)
+    for (let i = 0; i < this.config.slides.length; i++) {
+      const Slide = this.config.slides[i]
+      const slide = new Slide({
+        prestion: this,
+        index: i
+      })
       this.slides.push(slide)
+    }
+  }
+
+  initPlugins () {
+    for (const Plugin of this.config.plugins) {
+      const plugin = new Plugin({
+        prestion: this
+      })
+
+      this.plugins.set(plugin.constructor.name, plugin)
     }
   }
 
   async load() {
     const slidesContainer = new PIXI.Container()
     slidesContainer.name = 'Slides'
+
+    for (const plugin of this.plugins.values()) {
+      plugin.onPreLoad()
+    }
 
     for (const slide of this.slides) {
       slide.onPreLoad()
@@ -95,12 +148,19 @@ export default class PrestionProject {
 
     this.app.stage.addChild(slidesContainer)
 
+    await Promise.all([...this.plugins.values()].map(s => s.load()))
+
     await Promise.all(this.slides.map(s => s.load()))
 
     return new Promise(resolve => {
       this.loader.load((_, resources) => {
         this.resources = resources
 
+
+
+        for (const plugin of this.plugins.values()) {
+          plugin.onPostLoad()
+        }
 
         for (const slide of this.slides) {
           slide.onPostLoad()
@@ -129,45 +189,108 @@ export default class PrestionProject {
 
     this.app.start()
 
-    this.startSlide(this.currentSlide)
+
+    for (const plugin of this.plugins.values()) {
+      plugin.onStart()
+    }
+
+    this.currentSlide.visible = true
+    this.currentSlide.onPreStart()
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        this.canMove = true
+      }
+    })
+
+    this.currentSlide.createStartTimeline(tl)
   }
 
-  nextSlide() {
-    this.endSlide(this.currentSlide)
-  }
+  back () {
+    if (!this.canMove) return
 
-  /**
-   * Do the start animation on the slide
-   * @param {Slide} slide
-   */
-  startSlide(slide) {
-    slide.visible = true
-    slide.onPreStart()
+    this.canMove = false
+    const {previusSlide, currentSlide} = this
+
+    for (const plugin of this.plugins.values()) {
+      plugin.onPreBackSlide(previusSlide)
+    }
+
+    currentSlide.onPreEnd()
+
+    previusSlide.visible = true
+    previusSlide.onPreStart()
 
     const tl = gsap.timeline({
       paused: true,
+      onComplete: () => {
+        for (const plugin of this.plugins.values()) {
+          plugin.onBackSlide()
+        }
+        currentSlide.visible = false
+        currentSlide.onEnd()
+        previusSlide.onStart()
+        this.canMove = true
+      }
     })
 
-    slide.createStartTimeline(tl, () => {
-      slide.onStart()
+    currentSlide.createEndTimeline(tl)
+
+    tl.addLabel('Transition')
+
+    tl.add(() => {
+      this._currentSlide--
+      for (const plugin of this.plugins.values()) {
+        plugin.onTransition()
+      }
     })
+
+    previusSlide.createStartTimeline(tl)
+
     tl.play()
   }
 
-  /**
-   * Do the ending animation on the slide
-   * @param {Slide} slide
-   */
-  endSlide(slide) {
-    slide.onPreEnd()
+  next() {
+    if (!this.canMove) return
+
+    this.canMove = false
+    const {currentSlide, nextSlide} = this
+
+    for (const plugin of this.plugins.values()) {
+      plugin.onPreNextSlide(nextSlide)
+    }
+
+    currentSlide.onPreEnd()
+
+    nextSlide.visible = true
+    nextSlide.onPreStart()
+
     const tl = gsap.timeline({
-      paused: false
+      paused: true,
+      onComplete: () => {
+        for (const plugin of this.plugins.values()) {
+          plugin.onNextSlide()
+        }
+        currentSlide.visible = false
+        currentSlide.onEnd()
+        nextSlide.onStart()
+        this.canMove = true
+      }
     })
 
-    slide.createEndTimeline(tl, () => {
+    currentSlide.createEndTimeline(tl)
+
+    tl.addLabel('Transition')
+
+    tl.add(() => {
       this._currentSlide++
-      this.startSlide(this.currentSlide)
+      for (const plugin of this.plugins.values()) {
+        plugin.onTransition()
+      }
     })
+
+    nextSlide.createStartTimeline(tl)
+
     tl.play()
   }
 }
