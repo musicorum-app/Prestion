@@ -2,9 +2,19 @@ import * as PIXI from 'pixi.js'
 import gsap from 'gsap'
 import {version} from './package.json'
 
+const defaultConfig = {
+  name: 'Unnamed project',
+  slides: [],
+  plugins: [],
+  element: 'body'
+}
+
+/**
+ * @prop {Slide[]} slides
+ */
 export default class PrestionProject {
   constructor(config) {
-    this.config = config
+    this.config = {...defaultConfig, ...config}
     this.name = config.name
 
     const element = config.element
@@ -19,9 +29,16 @@ export default class PrestionProject {
 
     this.slides = []
     this.plugins = new Map()
+    this.slidesContainer = null
 
     this._currentSlide = 0
     this._canMove = false
+
+    this.state = {}
+    this.stateTypes = {}
+    this._cachedState = {}
+    this._stateDefined = false
+    this._defaultState = {}
 
     this.initPlugins()
     this.initSlides()
@@ -41,7 +58,7 @@ export default class PrestionProject {
    * The previous slide referring to the current, or undefined
    * @returns {Slide|undefined}
    */
-  get previusSlide () {
+  get previusSlide() {
     return this.slides[this._currentSlide - 1]
   }
 
@@ -49,7 +66,7 @@ export default class PrestionProject {
    * The next slide referring to the current, or undefined
    * @returns {Slide|undefined}
    */
-  get nextSlide () {
+  get nextSlide() {
     return this.slides[this._currentSlide + 1]
   }
 
@@ -62,26 +79,71 @@ export default class PrestionProject {
     this.onCanMoveValueChange(value)
   }
 
+  get stage() {
+    return this.app?.stage
+  }
+
+  get state() {
+    return this._state
+  }
+
+  set state(value) {
+    if (!this._stateDefined) {
+      this._state = value
+    } else {
+      throw new Error('The state was already defined.') // TODO: Merge the value with the state instead of throwing an error
+    }
+  }
+
   /* Events */
+
+  /**
+   * Trigger an event to every loaded plugin
+   * @param {string} event - The function to run
+   * @param {any} args - The params for the function
+   */
+  triggerPluginEvent(event, ...args) {
+    for (const plugin of this.plugins.values()) {
+      plugin[event](...args)
+    }
+  }
+
+  /**
+   * Trigger an event to every loaded slide
+   * @param {string} event - The function to run
+   * @param {any} args - The params for the function
+   */
+  triggerSlideEvent(event, ...args) {
+    for (const slide of this.slides) {
+      slide[event](...args)
+    }
+  }
+
+  onPreLoad() {
+
+  }
 
   /**
    * Event triggered when the canMove value changes
    * @param {boolean} value
    */
   onCanMoveValueChange(value) {
-    for (const plugin of this.plugins.values()) {
-      plugin.onCanMoveValueChange(value)
-    }
+    this.triggerPluginEvent('onCanMoveValueChange', value)
   }
 
   /**
    *
    * @param {Slide} slide
    */
-  onStateUpdate (slide) {
-    for (const plugin of this.plugins.values()) {
-      plugin.onStateUpdate(slide)
-    }
+  onStateUpdate(slide) {
+    this.triggerPluginEvent('onStateUpdate', slide)
+  }
+
+  /**
+   * Event triggered when the engine's state is changed
+   */
+  onGlobalStateUpdate() {
+    this.triggerPluginEvent('onGlobalStateUpdate')
   }
 
   /**
@@ -91,9 +153,7 @@ export default class PrestionProject {
    */
   onWindowResize(width, height) {
     this.app.renderer.resize(width, height)
-    for (const slide of this.slides) {
-      slide.onWindowResize(width, height)
-    }
+    this.triggerSlideEvent('onWindowResize', width, height)
   }
 
   /* Methods */
@@ -108,7 +168,7 @@ export default class PrestionProject {
     }
   }
 
-  initPlugins () {
+  initPlugins() {
     for (const Plugin of this.config.plugins) {
       const plugin = new Plugin({
         prestion: this
@@ -120,16 +180,9 @@ export default class PrestionProject {
 
   async load() {
     const slidesContainer = new PIXI.Container()
+    this.slidesContainer = slidesContainer
     slidesContainer.name = 'Slides'
 
-    for (const plugin of this.plugins.values()) {
-      plugin.onPreLoad()
-    }
-
-    for (const slide of this.slides) {
-      slide.onPreLoad()
-      slidesContainer.addChild(slide.stage)
-    }
 
     window.__PIXI_INSPECTOR_GLOBAL_HOOK__ &&
     window.__PIXI_INSPECTOR_GLOBAL_HOOK__.register({PIXI: PIXI})
@@ -141,6 +194,14 @@ export default class PrestionProject {
       antialias: true,
       resolution: window.devicePixelRatio
     })
+
+    this.onPreLoad()
+
+    this.triggerPluginEvent('onPreLoad')
+    for (const slide of this.slides) {
+      slide._onPreLoad()
+      slidesContainer.addChild(slide.stage)
+    }
 
     if (!this.element) throw new Error('The element could not be found.')
 
@@ -156,15 +217,8 @@ export default class PrestionProject {
       this.loader.load((_, resources) => {
         this.resources = resources
 
-
-
-        for (const plugin of this.plugins.values()) {
-          plugin.onPostLoad()
-        }
-
-        for (const slide of this.slides) {
-          slide.onPostLoad()
-        }
+        this.triggerPluginEvent('onPostLoad')
+        this.triggerSlideEvent('onPostLoad')
 
         resolve()
       })
@@ -189,10 +243,9 @@ export default class PrestionProject {
 
     this.app.start()
 
+    this.startStates()
 
-    for (const plugin of this.plugins.values()) {
-      plugin.onStart()
-    }
+    this.triggerPluginEvent('onStart')
 
     this.currentSlide.visible = true
     this.currentSlide.onPreStart()
@@ -206,15 +259,28 @@ export default class PrestionProject {
     this.currentSlide.createStartTimeline(tl)
   }
 
-  back () {
+  startStates() {
+    this._state = {...this.state, ...this._cachedState}
+    this._defaultState = {...this._state}
+
+    this.state = new Proxy(this._state, {
+      set: (target, p, value) => {
+        target[p] = value
+        this.onGlobalStateUpdate()
+        return true
+      }
+    })
+
+    this._stateDefined = true
+  }
+
+  back() {
     if (!this.canMove) return
 
     this.canMove = false
     const {previusSlide, currentSlide} = this
 
-    for (const plugin of this.plugins.values()) {
-      plugin.onPreBackSlide(previusSlide)
-    }
+    this.triggerPluginEvent('onPreBackSlide', previusSlide)
 
     currentSlide.onPreEnd()
 
@@ -224,9 +290,8 @@ export default class PrestionProject {
     const tl = gsap.timeline({
       paused: true,
       onComplete: () => {
-        for (const plugin of this.plugins.values()) {
-          plugin.onBackSlide()
-        }
+        this.triggerPluginEvent('onBackSlide')
+
         currentSlide.visible = false
         currentSlide.onEnd()
         previusSlide.onStart()
@@ -240,9 +305,7 @@ export default class PrestionProject {
 
     tl.add(() => {
       this._currentSlide--
-      for (const plugin of this.plugins.values()) {
-        plugin.onTransition()
-      }
+      this.triggerPluginEvent('onTransition')
     })
 
     previusSlide.createStartTimeline(tl)
@@ -256,9 +319,7 @@ export default class PrestionProject {
     this.canMove = false
     const {currentSlide, nextSlide} = this
 
-    for (const plugin of this.plugins.values()) {
-      plugin.onPreNextSlide(nextSlide)
-    }
+    this.triggerPluginEvent('onPreNextSlide', nextSlide)
 
     currentSlide.onPreEnd()
 
@@ -268,9 +329,8 @@ export default class PrestionProject {
     const tl = gsap.timeline({
       paused: true,
       onComplete: () => {
-        for (const plugin of this.plugins.values()) {
-          plugin.onNextSlide()
-        }
+        this.triggerPluginEvent('onNextSlide')
+
         currentSlide.visible = false
         currentSlide.onEnd()
         nextSlide.onStart()
@@ -284,9 +344,7 @@ export default class PrestionProject {
 
     tl.add(() => {
       this._currentSlide++
-      for (const plugin of this.plugins.values()) {
-        plugin.onTransition()
-      }
+      this.triggerPluginEvent('onTransition')
     })
 
     nextSlide.createStartTimeline(tl)

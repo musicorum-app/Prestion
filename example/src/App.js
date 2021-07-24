@@ -6,11 +6,12 @@ function App() {
   useEffect(() => {
     const pr = document.getElementsByClassName('prestion')[0]
 
-    if (pr.children.length !== 0) {
-      for (let child of pr.children) {
-        child.remove()
-      }
+    for (let child of pr.children) {
+      console.log(child)
+      child.remove()
     }
+
+    document.querySelectorAll('canvas, .prestion_tools').forEach(e => e.remove())
 
     const prestion = new ExampleProject()
     window.prestion = prestion

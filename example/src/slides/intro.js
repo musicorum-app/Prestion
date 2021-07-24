@@ -12,24 +12,26 @@ export default class IntroSlide extends Slide {
 
     this.state = {
       title: 'Prestion example',
-      backgroundColor: '#26dce2'
+      boldText: false,
+      showImage: true
     }
 
-    this.defineStateTypes({
+    this.stateTypes = {
       title: 'string',
-      backgroundColor: 'color'
-    })
+      boldText: 'boolean',
+      showImage: 'boolean'
+    }
   }
 
   onPreLoad() {
-    this.engine.loader.add('test', 'alo.png')
+    this.engine.loader.add('img', 'https://i.imgur.com/1QbyuDT.png')
   }
 
   onPostLoad() {
-    const bg = new PIXI.Graphics()
+    const img = new PIXI.Sprite(this.resources.img.texture)
+    img.position.set(200, 200)
 
-
-    this.stage.addChild(bg)
+    this.stage.addChild(img)
 
 
     const txt = new PIXI.Text(this.state.title, new PIXI.TextStyle({
@@ -43,13 +45,8 @@ export default class IntroSlide extends Slide {
 
     this.items = {
       txt,
-      bg
+      img
     }
-    this.updateBgColor()
-  }
-
-  onWindowResize(width, height) {
-    this.updateBgColor()
   }
 
   createStartTimeline(tl) {
@@ -66,20 +63,17 @@ export default class IntroSlide extends Slide {
     })
   }
 
-  updateBgColor() {
-    const [width, height] = getWindowSize()
-    this.items.bg.clear()
-      .beginFill(chroma(this.state.backgroundColor).num())
-      .drawRect(0, 0, width, height)
-      .endFill()
-  }
 
   createEndTimeline(tl) {
     console.log('end')
   }
 
   onStateUpdate() {
-    this.updateBgColor()
     this.items.txt.text = this.state.title
+
+    this.items.txt.style.fontWeight = this.state.boldText ? 'bold' : 'normal'
+
+    this.items.img.visible = this.state.showImage
   }
 }
+

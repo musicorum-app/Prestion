@@ -1,3 +1,6 @@
+/**
+ * @prop {PrestionProject} engine
+ */
 export default class Plugin {
   constructor({prestion}, config) {
     this.engine = prestion
@@ -45,6 +48,14 @@ export default class Plugin {
   }
 
   onTransition () {
+
+  }
+
+  onStateUpdate (slide) {
+
+  }
+
+  onGlobalStateUpdate () {
 
   }
 }

@@ -11,6 +11,7 @@ export default class Graph {
     this.values = []
     this.c = 60
     this.cVal = 0
+    this.label = v => v
   }
 
   load() {
@@ -36,9 +37,9 @@ export default class Graph {
     this.grad.addColorStop(1, chroma(this.colors.primary).alpha(.1))
   }
 
-  draw(value) {
+  draw(value, topV) {
     const f = x => x - (x % 10) + 50
-    const topValue = Math.max(...this.values.map(v => f(v)))
+    const topValue = topV || Math.max(...this.values.map(v => f(v)))
     const ctx = this.canvas.getContext('2d')
 
     ctx.clearRect(0, 0, ...this.size)
@@ -56,6 +57,7 @@ export default class Graph {
     ctx.fillText(topValue, this.left - 4, 2)
 
     const avg = this.values.reduce((a, b) => a + b, 0) / this.values.length
+    
     const averageVal = f(avg)
 
     const averageY = convertRange(averageVal, [topValue, 0], [0, this.size[1] - this.top])
@@ -117,7 +119,7 @@ export default class Graph {
     ctx.fillStyle = this.colors.third
     ctx.font = '22px "Poppins"'
     ctx.textAlign = 'left'
-    ctx.fillText(~~value, this.left, this.size[1] - 2)
+    ctx.fillText(this.label(~~value), this.left, this.size[1] - 2)
 
     ctx.textAlign = 'right'
     if (this.c > 50) {
@@ -127,6 +129,6 @@ export default class Graph {
     this.c++
 
     ctx.clearRect(this.size[0] / 2, this.size[1] - this.top, this.size[0] / 2, this.top)
-    ctx.fillText(~~this.cVal, this.size[0] - 2, this.size[1] - 2)
+    ctx.fillText(this.label(~~this.cVal), this.size[0] - 2, this.size[1] - 2)
   }
 }

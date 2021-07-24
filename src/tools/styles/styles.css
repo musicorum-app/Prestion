@@ -1,0 +1,205 @@
+:root {
+    --GUI_BACKGROUND: #131313;
+    --GUI_BORDER: #3c3c3c;
+    --THEME_COLOR: #225FFF;
+}
+
+
+.prestion_tools {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+}
+
+.prestion_info_panel {
+    background: var(--GUI_BACKGROUND);
+    border: 1px solid var(--GUI_BORDER);
+    border-radius: 3px;
+    margin: 14px;
+    padding: 4px 14px 4px 20px;
+}
+
+.prestion_info_panel .section_title {
+    font-weight: 600;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    position: relative;
+    left: -6px;
+    margin: 0;
+    padding-bottom: 6px;
+}
+
+.prestion_info_panel p {
+    margin: 2px 0;
+}
+
+.prestion_info_panel hr {
+    position: relative;
+    border-color: rgba(255, 255, 255, 0.2);
+    left: -6px;
+    width: calc(100% + 6px);
+}
+
+.prestion_panel_controls {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.prestion_panel_controls button {
+    background: transparent;
+    border: none;
+    transition: opacity 200ms ease;
+}
+
+.prestion_panel_controls button svg {
+    width: 32px;
+    height: 32px;
+}
+
+.prestion_panel_controls button:hover {
+    opacity: .7;
+    cursor: pointer;
+}
+
+.prestion_panel_controls button:disabled {
+    opacity: .3;
+    cursor: no-drop;
+}
+
+.prestion_panel_controls button[data-prestion-replace="back"] svg {
+    transform: rotateZ(180deg);
+}
+
+.prestion_state_input_item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 6px 0;
+    border: 2px solid transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.prestion_state_input_item:last-child {
+    border-bottom: none;
+}
+
+.prestion_state_input_item_text {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    width: 40%;
+    white-space: nowrap;
+}
+
+.prestion_state_input_item_input {
+    width: 60%;
+    background: #2a2a2a;
+    border: 2px solid #2a2a2a;
+    border-radius: 3px;
+    color: white;
+    transition: all 200ms ease;
+    padding: 4px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    height: 27px;
+    display: flex;
+    align-items: center;
+}
+
+.prestion_state_input_item_input:hover {
+    background: #363636;
+    border-color: #363636;
+}
+
+.prestion_state_input_item_input:focus {
+    background: rgba(255, 255, 255, 0.25);
+    outline: none;
+    border-color: var(--THEME_COLOR);
+}
+
+.prestion_state_input_item input[type="text"] {
+    font-size: 15px;
+}
+
+.prestion_state_input_item_input input[type="color"] {
+    visibility: hidden;
+    width: 1px;
+}
+
+.prestion_state_input_item_color_box {
+    width: 19px;
+    height: 19px;
+    background: transparent;
+    border-radius: 2px;
+    margin-right: 4px;
+}
+
+.prestion_state_input_item input[type="checkbox"] {
+    display: none;
+}
+
+.prestion_state_input_item_bool_wrapper {
+    border-radius: 50px;
+    height: 25px;
+    width: 50px;
+    display: flex;
+}
+
+.prestion_state_input_item_bool_wrapper[data-prestion-checked="true"] {
+    background: rgba(34, 95, 255, 0.3);
+    border-color: rgba(34, 95, 255, 0.3);
+}
+
+.prestion_state_input_item_bool_inside {
+    width: 17px;
+    height: 17px;
+    background: rgba(255, 255, 255, 0.3);
+    float: right;
+    border-radius: 23px;
+    transition: all 300ms ease;
+    margin-left: 0;
+}
+
+.prestion_state_input_item_bool_wrapper[data-prestion-checked="true"] .prestion_state_input_item_bool_inside {
+    background: var(--THEME_COLOR);
+    margin-left: 21px;
+}
+
+.prestion_state_input_item_bool_wrapper:hover {
+    cursor: pointer;
+}
+
+.prestion_state_input_item_image {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.prestion_state_input_item[data-prestion-state-type="image"] .prestion_state_input_image_preview {
+    width: 218px;
+    height: 90px;
+}
+.prestion_state_input_item[data-prestion-state-type="image"] img {
+    object-fit: cover;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background: #2a2a2a;
+}
+
+
+.prestion_state_input_item[data-prestion-state-type="image"].dragging {
+    border-radius: 5px;
+    border: 2px solid var(--THEME_COLOR);
+    opacity: 0.5;
+}

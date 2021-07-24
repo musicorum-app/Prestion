@@ -1,4 +1,9 @@
-export default function InfoPanel() {
+/**
+ *
+ * @param {PrestionTools} plugin
+ * @returns {string}
+ */
+export default function InfoPanel(plugin) {
   return `
 <div class="prestion_info_panel">
   <p class="section_title">Slide</p>
@@ -17,6 +22,22 @@ export default function InfoPanel() {
   <hr />
   <p class="section_title">Metrics</p>
   <div id="prestion_framerate_graph"></div>
+  <div id="prestion_memory_graph"></div>
+  <p class="section_title">Settings</p>
+  
+  <div class="prestion_states">
+  <label class="prestion_state_input_item" data-prestion-config="keep-state">
+  <span class="prestion_state_input_item_text" style="width: auto">
+      Keep data
+  </span>
+  <input class="prestion_state_input_item_bool_input" type="checkbox" ${plugin.settings.keepData ? 'checked' : ''}>
+   <div class="prestion_state_input_item_input prestion_state_input_item_bool_wrapper" data-prestion-checked="${plugin.settings.keepData}">
+        <div class="prestion_state_input_item_bool_inside" />
+    </div>
+</label>
+    </div>
+    </div>
+  
 </div>
   `
 }

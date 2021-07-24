@@ -1,8 +1,6 @@
 import {Slide} from "@musicorum/prestion";
-import * as PIXI from "pixi.js";
-import {getWindowSize} from "@musicorum/prestion/utils";
-import gsap from "gsap";
-import chroma from 'chroma-js'
+import * as PIXI from 'pixi.js'
+import {BlankImage} from "@musicorum/prestion/utils";
 
 export default class TestSlide extends Slide {
   constructor(p) {
@@ -12,61 +10,52 @@ export default class TestSlide extends Slide {
     })
 
     this.state = {
-      bgColor: '#26dce2'
+      image: BlankImage
     }
 
-    this.defineStateTypes({
-      bgColor: 'color'
+    this.stateTypes = {
+      image: 'image'
+    }
+  }
+
+  onPreLoad() {
+    this.engine.loader.add('artist', 'https://i.scdn.co/image/ab6761610000e5eb542bce36778c57b4abf80c88', {
+      loadType: PIXI.LoaderResource.LOAD_TYPE.IMAGE,
+      xhrType: PIXI.LoaderResource.XHR_RESPONSE_TYPE.BLOB
     })
   }
 
   onPostLoad() {
-    const bg = new PIXI.Graphics()
+    const img = new PIXI.Sprite()
+    img.position.set(280, 40)
+    img.scale.set(0.8, 0.8)
 
-    this.stage.addChild(bg)
+    this.stage.addChild(img)
 
     this.items = {
-      bg
+      img
     }
-
-    this.updateBgColor()
+    if (this.state.image.isBlank) {
+      this.state.image = this.resources.artist.data
+    }
   }
 
-  onWindowResize(width, height) {
-    this.updateBgColor()
-  }
 
   createStartTimeline(tl) {
-    tl.to(this.state, {
-      bgColor: '#b851e3',
-      duration: 1.3,
-      onStart: () => {
-        this.items.bg.visible = true
-      },
-      onUpdate: () => this.updateBgColor(),
+    tl.to(this.globalState, {
+      backgroundColor: '#b851e3',
+      duration: 1.3
     })
   }
 
   createEndTimeline (tl) {
-    tl.to(this.state, {
-      bgColor: '#26dce2',
+    tl.to(this.globalState, {
+      backgroundColor: '#26dce2',
       duration: 1.3,
-      onComplete: () => {
-        this.items.bg.visible = false
-      },
-      onUpdate: () => this.updateBgColor(),
     })
   }
 
-  updateBgColor() {
-    const [width, height] = getWindowSize()
-    this.items.bg.clear()
-      .beginFill(chroma(this.state.bgColor).num())
-      .drawRect(0, 0, width, height)
-      .endFill()
-  }
-
   onStateUpdate() {
-    this.updateBgColor()
+    this.items.img.texture = PIXI.Texture.from(this.state.image)
   }
 }
