@@ -27,8 +27,8 @@ export function loadImage (src) {
  */
 export function imageToDataURI (image) {
   const canvas = document.createElement('canvas')
-  canvas.width = image.width
-  canvas.height = image.height
+  canvas.width = image.naturalWidth
+  canvas.height = image.naturalHeight
   canvas.getContext('2d').drawImage(image, 0, 0)
 
   return canvas.toDataURL('image/png')

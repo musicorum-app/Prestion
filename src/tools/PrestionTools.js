@@ -18,15 +18,12 @@ export default class PrestionTools extends Plugin {
     this.stateStorageKey = `__PRESTION_T_STATE_${this.engine.constructor.name}`
   }
 
-  onPreLoad() {
-    this.handleSavedData()
-  }
-
   onStart() {
     this.element = document.createElement('div')
     this.element.className = 'prestion_tools'
     this.element.innerHTML = PrestionToolsComponent(this)
     this.engine.element.appendChild(this.element)
+
 
     this.createFPSGraph()
     this.createMemoryGraph()
@@ -38,6 +35,7 @@ export default class PrestionTools extends Plugin {
     this.updateSlideData()
     this.createStates(this.engine.currentSlide)
     this.createGlobalStates()
+    this.handleSavedData()
 
     setInterval(() => this.saveStates(), this.stateSaveInterval)
   }
@@ -45,10 +43,12 @@ export default class PrestionTools extends Plugin {
   onPostLoad() {
     this.createSettings()
     const val = localStorage.getItem(`${this.stateStorageKey}_SLIDE`)
-    if (this.settings.keepData && val) {
-      const slide = this.engine.slides.find(s => s.id === val)
-      if (slide) {
-        this.engine._currentSlide = slide.index
+    if (this.settings.keepData) {
+      if (val) {
+        const slide = this.engine.slides.find(s => s.id === val)
+        if (slide) {
+          this.engine._currentSlide = slide.index
+        }
       }
     }
   }
@@ -64,15 +64,18 @@ export default class PrestionTools extends Plugin {
       }
     }
 
-    console.log(this.settingsStorageKey)
 
     this.settings = new Proxy(settings, {
       set: (target, p, value) => {
         target[p] = value
         localStorage.setItem(this.settingsStorageKey, JSON.stringify(settings))
 
-        if (p === 'keepData' && !value) {
-          localStorage.removeItem(`${this.stateStorageKey}_SLIDE`)
+        if (p === 'keepData') {
+          if (value) {
+            this.saveStates()
+          } else {
+            localStorage.removeItem(`${this.stateStorageKey}_SLIDE`)
+          }
         }
 
         return true
@@ -172,7 +175,6 @@ export default class PrestionTools extends Plugin {
 
         wrapper.querySelector('.prestion_state_input_image_preview').appendChild(defaultValue)
 
-        console.log(wrapper)
         wrapper.addEventListener('drop', async ev => {
           ev.preventDefault()
           try {
@@ -220,7 +222,6 @@ export default class PrestionTools extends Plugin {
     this.createStates(this.engine.currentSlide)
 
     if (this.settings.keepData) {
-      localStorage.setItem(`${this.stateStorageKey}_SLIDE`, this.engine.currentSlide.id)
       this.saveStates()
     }
   }
@@ -263,6 +264,7 @@ export default class PrestionTools extends Plugin {
         const clone = new Image()
         clone.src = value.src
         clone.setAttribute('crossorigin', 'anonymous')
+        clone.setAttribute('data-prestion-clone-from', k)
         el.querySelector('.prestion_state_input_image_preview').appendChild(clone)
       } else {
         input.value = value
@@ -309,17 +311,10 @@ export default class PrestionTools extends Plugin {
           if (type === 'image') {
             loadImage(value)
               .then(img => {
-                console.log(img)
-                if (stateHolder._stateDefined) {
-                  stateHolder.state[k] = img
-
-                } else {
-                  stateHolder._cachedState[k] = img
-
-                }
+                stateHolder.state[k] = img
               })
           } else {
-            stateHolder._cachedState[k] = value
+            stateHolder.state[k] = value
           }
         }
       }
@@ -336,6 +331,8 @@ export default class PrestionTools extends Plugin {
 
   saveStates() {
     if (!this.settings.keepData) return
+
+    localStorage.setItem(`${this.stateStorageKey}_SLIDE`, this.engine.currentSlide.id)
 
     const globalStateKey = `${this.stateStorageKey}_GLOBAL_STATE`
     const cleanClone = this.getCleanedStateClone(this.engine)
