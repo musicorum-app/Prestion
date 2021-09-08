@@ -1,5 +1,5 @@
 import chroma from 'chroma-js'
-import {convertRange} from "@musicorum/prestion/utils";
+import {utils as PUtils} from "@musicorum/prestion";
 
 export default class Graph {
   constructor(name, colors) {
@@ -60,7 +60,7 @@ export default class Graph {
     
     const averageVal = f(avg)
 
-    const averageY = convertRange(averageVal, [topValue, 0], [0, this.size[1] - this.top])
+    const averageY = PUtils.convertRange(averageVal, [topValue, 0], [0, this.size[1] - this.top])
 
     ctx.textBaseline = 'middle'
     ctx.fillText(averageVal, this.left - 4, averageY)
@@ -79,7 +79,7 @@ export default class Graph {
     ctx.lineTo(this.size[0], averageY)
     ctx.stroke()
 
-    const y = convertRange(value, [topValue, 0], [0, this.size[1] - this.top])
+    const y = PUtils.convertRange(value, [topValue, 0], [0, this.size[1] - this.top])
 
     ctx.strokeStyle = this.colors.third
     ctx.beginPath()
@@ -94,7 +94,7 @@ export default class Graph {
     let fy = 0
     for (let i = 0; i < this.values.length; i++) {
       const val = this.values[i]
-      const vy = convertRange(val, [topValue, 0], [0, this.size[1] - this.top])
+      const vy = PUtils.convertRange(val, [topValue, 0], [0, this.size[1] - this.top])
       if (i === 0) {
         // ctx.moveTo(this.left + 1, vy)
         fy = vy

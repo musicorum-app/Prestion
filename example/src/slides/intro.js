@@ -19,7 +19,7 @@ export default class IntroSlide extends Slide {
     this.stateTypes = {
       title: 'string',
       boldText: 'boolean',
-      showImage: 'boolean'
+      showImage: 'boolean',
     }
   }
 

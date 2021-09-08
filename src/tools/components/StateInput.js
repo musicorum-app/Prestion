@@ -6,8 +6,6 @@
  * @constructor
  */
 export default function StateInput(slide, state, type, defaultValue) {
-
-
   return `
 <label class="prestion_state_input_item" data-prestion-state="${state}" data-prestion-state-type="${type}">
   <span class="prestion_state_input_item_text">

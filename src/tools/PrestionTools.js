@@ -1,11 +1,10 @@
-import {Plugin, Slide} from "@musicorum/prestion";
+import {Plugin, Slide, utils as PUtils} from "@musicorum/prestion";
 import PrestionToolsComponent from "./components/PrestionTools";
 import FrameRateGraph from "./graphs/FrameRateGraph";
 import StateInput from "./components/StateInput";
 import '@simonwep/pickr/dist/themes/nano.min.css';
 import chroma from 'chroma-js'
 import MemoryGraph from "./graphs/MemoryGraph";
-import {imageToDataURI, loadImage} from "@musicorum/prestion/utils";
 
 export default class PrestionTools extends Plugin {
   constructor(props) {
@@ -184,7 +183,7 @@ export default class PrestionTools extends Plugin {
             if (file) {
               stateHolder.state[k] = await this.fileToImage(file)
             } else {
-              stateHolder.state[k] = await loadImage(dataTransfer.getData("url"))
+              stateHolder.state[k] = await PUtils.loadImage(dataTransfer.getData("url"))
             }
             fn()
           } catch (e) {
@@ -292,7 +291,7 @@ export default class PrestionTools extends Plugin {
 
       if (type === 'image' && value.src) {
         const isB64 = value.src.startsWith('data:image')
-        clone[key] = [type, isB64 ? value.src : imageToDataURI(value)]
+        clone[key] = [type, isB64 ? value.src : PUtils.imageToDataURI(value)]
       } else {
         clone[key] = [type, value]
       }
@@ -309,7 +308,7 @@ export default class PrestionTools extends Plugin {
           if (type !== stateHolder.stateTypes[k]) continue
 
           if (type === 'image') {
-            loadImage(value)
+            PUtils.loadImage(value)
               .then(img => {
                 stateHolder.state[k] = img
               })
@@ -358,7 +357,7 @@ export default class PrestionTools extends Plugin {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => {
-        loadImage(reader.result.toString())
+        PUtils.loadImage(reader.result.toString())
           .then(res => resolve(res))
       }
       reader.onerror = () => {
