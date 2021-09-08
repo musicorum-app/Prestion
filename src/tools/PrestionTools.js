@@ -135,7 +135,7 @@ export default class PrestionTools extends Plugin {
 
 
     slideNumber.innerHTML = `${this.engine._currentSlide}/${this.engine.slides.length - 1}`
-    currentSlide.innerHTML = this.engine.currentSlide._config.name
+    currentSlide.innerHTML = this.engine.currentSlide._options.name
   }
 
   /**
@@ -147,7 +147,7 @@ export default class PrestionTools extends Plugin {
 
     this.buildStates(statesElement, slide, () => slide._onStateUpdate())
 
-    this.statesSlide = slide._config.id
+    this.statesSlide = slide._options.id
   }
 
   createGlobalStates() {
@@ -234,7 +234,7 @@ export default class PrestionTools extends Plugin {
    * @param {Slide} slide
    */
   onStateUpdate(slide) {
-    if (this.statesSlide !== slide._config.id) return
+    if (this.statesSlide !== slide._options.id) return
     const statesElement = this.getReplaceableElement('slide_state')
 
     this.updateElementStates(statesElement, slide)
@@ -253,6 +253,7 @@ export default class PrestionTools extends Plugin {
   updateElementStates(statesElement, stateHolder) {
     for (let [k, v] of Object.entries(stateHolder.stateTypes)) {
       const el = statesElement.querySelector(`[data-prestion-state="${k}"]`)
+      if (!el) continue
       const input = statesElement.querySelector(`[data-prestion-state-input="${k}"]`)
       const value = stateHolder.state[k]
 

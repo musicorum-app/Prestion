@@ -1,4 +1,4 @@
-import { Slide, utils } from "@musicorum/prestion";
+import { PrestionProject, Slide, utils } from "@musicorum/prestion";
 import { SlideInsideOptions, StateObject } from "@musicorum/prestion/dist/src/typings";
 import ExampleProject from "../project";
 import * as PIXI from 'pixi.js'
@@ -49,6 +49,7 @@ export default class SecondSlide extends Slide<ExampleProject, SecondSlideState>
       image
     }
 
+    
     if ('isBlank' in this.state.image) {
       this.state.image = (this.resources?.artist2 as any).data
     }
@@ -69,6 +70,13 @@ export default class SecondSlide extends Slide<ExampleProject, SecondSlideState>
   }
 
   onStateUpdate() {
+    if (!this.items) return
     this.items.image.texture = PIXI.Texture.from(this.state.image)
+  }
+
+  onWindowResize(width: number, height: number) {
+    super.onWindowResize(width, height)
+
+
   }
 }

@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "The Prestion's library dev tools",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
