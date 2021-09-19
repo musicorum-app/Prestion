@@ -2,8 +2,8 @@
   "name": "@musicorum/prestion",
   "version": "2.0.0",
   "description": "Javascript framework for web presentations using PixiJS",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

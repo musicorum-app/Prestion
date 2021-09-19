@@ -1,5 +1,4 @@
-import { PrestionProject, Slide, utils } from "@musicorum/prestion";
-import { SlideInsideOptions, StateObject } from "@musicorum/prestion/dist/src/typings";
+import { Slide, PrestionUtils, StateObject, SlideInsideOptions } from "@musicorum/prestion";
 import ExampleProject from "../project";
 import * as PIXI from 'pixi.js'
 import {gsap} from 'gsap'
@@ -17,12 +16,12 @@ export default class SecondSlide extends Slide<ExampleProject, SecondSlideState>
 
   constructor(p: SlideInsideOptions<ExampleProject>) {
     super(p, {
-      id: 'intro',
-      name: 'Intro Slide'
+      id: 'second',
+      name: 'Second Slide'
     })
 
     this.state = {
-      image: utils.BlankImage
+      image: PrestionUtils.BlankImage
     }
 
     this.stateTypes = {

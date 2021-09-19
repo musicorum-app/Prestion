@@ -1,10 +1,8 @@
-import { PrestionProject } from "@musicorum/prestion"
-import { StateObject } from "@musicorum/prestion/dist/src/typings"
+import { PrestionProject, PrestionUtils, StateObject } from "@musicorum/prestion"
 import {PrestionTools} from "@musicorum/prestion-tools"
 import IntroSlide from "./slides/intro"
 import SecondSlide from "./slides/second"
 import * as PIXI from 'pixi.js'
-import { getWindowSize } from "@musicorum/prestion/dist/src/utils"
 import chroma from "chroma-js"
 
 interface ExampleProjectState extends StateObject {
@@ -57,7 +55,7 @@ export default class ExampleProject extends PrestionProject<ExampleProjectState>
   }
 
   updateBackgroundColor() {
-    const [width, height] = getWindowSize()
+    const [width, height] = PrestionUtils.getWindowSize()
 
     this.items?.background.clear()
     .beginFill(chroma(this.state.backgroundColor).num())

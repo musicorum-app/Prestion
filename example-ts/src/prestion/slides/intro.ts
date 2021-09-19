@@ -1,5 +1,4 @@
-import { Slide } from "@musicorum/prestion";
-import { SlideInsideOptions, StateObject } from "@musicorum/prestion/dist/src/typings";
+import { Slide, SlideInsideOptions, StateObject } from "@musicorum/prestion";
 import ExampleProject from "../project";
 import * as PIXI from 'pixi.js'
 import {gsap} from 'gsap'

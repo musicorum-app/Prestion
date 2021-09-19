@@ -1,11 +1,13 @@
 import PrestionProject from './PrestionProject'
 import Slide from './Slide'
 import Plugin from './Plugin'
-import * as utils from './utils'
+import * as PrestionUtils from './utils'
 
 export {
   PrestionProject,
   Slide,
   Plugin,
-  utils
+  PrestionUtils
 }
+
+export * from './typings'
