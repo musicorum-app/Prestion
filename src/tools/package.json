@@ -2,10 +2,11 @@
   "name": "@musicorum/prestion-tools",
   "version": "2.0.0",
   "description": "The Prestion's library dev tools",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,19 @@
     "@musicorum/prestion": "file:../prestion/",
     "@simonwep/pickr": "^1.8.1",
     "chroma-js": "^2.1.2",
-    "preact": "^10.5.14"
+    "preact": "^10.5.14",
+    "tweakpane": "^3.0.5"
+  },
+  "devDependencies": {
+    "@tweakpane/core": "^1.0.6",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "typescript": "^4.4.2"
   }
 }

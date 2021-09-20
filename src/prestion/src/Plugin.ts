@@ -53,4 +53,8 @@ export default class Plugin<P extends PrestionProject> {
   onGlobalStateUpdate () {
     /// Global state update event
   }
+
+  onCanMoveValueChange () {
+    // Can move value change event
+  }
 }

@@ -1,28 +1,24 @@
-import {Plugin, Slide, utils as PUtils} from "@musicorum/prestion";
-import PrestionToolsComponent from "./components/PrestionTools";
-import FrameRateGraph from "./graphs/FrameRateGraph";
-import StateInput from "./components/StateInput";
-import '@simonwep/pickr/dist/themes/nano.min.css';
+import { Plugin, PrestionProject, Slide, PrestionUtils } from '@musicorum/prestion'
 import chroma from 'chroma-js'
-import MemoryGraph from "./graphs/MemoryGraph";
 
-export default class PrestionTools extends Plugin {
-  constructor(props) {
-    super(props, {
-      name: 'Prestion Tools'
-    })
+export default class PrestionTools extends Plugin<PrestionProject> {
+  private stateSaveInterval = 10E3 // 10 seconds
+  private settingsStorageKey: string
+  private stateStorageKey: string
+  private storageKeyPrefix = '__PRESTOOLS_'
 
-    this.stateSaveInterval = 10E3 // 10 seconds
-    this.settingsStorageKey = `__PRESTION_T_SETTINGS_${this.engine.constructor.name}`
-    this.stateStorageKey = `__PRESTION_T_STATE_${this.engine.constructor.name}`
+  constructor (props: PrestionProject) {
+    super(props)
+
+    this.settingsStorageKey = `${this.storageKeyPrefix}_SETTINGS_${this.engine.constructor.name}`
+    this.stateStorageKey = `${this.storageKeyPrefix}_STATE_${this.engine.constructor.name}`
   }
 
-  onStart() {
+  onStart () {
     this.element = document.createElement('div')
     this.element.className = 'prestion_tools'
     this.element.innerHTML = PrestionToolsComponent(this)
     this.engine.element.appendChild(this.element)
-
 
     this.createFPSGraph()
     this.createMemoryGraph()
@@ -39,7 +35,7 @@ export default class PrestionTools extends Plugin {
     setInterval(() => this.saveStates(), this.stateSaveInterval)
   }
 
-  onPostLoad() {
+  onPostLoad () {
     this.createSettings()
     const val = localStorage.getItem(`${this.stateStorageKey}_SLIDE`)
     if (this.settings.keepData) {
@@ -52,7 +48,7 @@ export default class PrestionTools extends Plugin {
     }
   }
 
-  createSettings() {
+  createSettings () {
     let settings = {
       keepData: false
     }
@@ -62,7 +58,6 @@ export default class PrestionTools extends Plugin {
         ...JSON.parse(window.localStorage.getItem(this.settingsStorageKey))
       }
     }
-
 
     this.settings = new Proxy(settings, {
       set: (target, p, value) => {
@@ -82,7 +77,7 @@ export default class PrestionTools extends Plugin {
     })
   }
 
-  createSettingsComponent() {
+  createSettingsComponent () {
     const element = this.element.querySelector('.prestion_states')
 
     const keepState = element.querySelector('[data-prestion-config="keep-state"]')
@@ -98,7 +93,7 @@ export default class PrestionTools extends Plugin {
     }
   }
 
-  createFPSGraph() {
+  createFPSGraph () {
     const graph = new FrameRateGraph()
     graph.load()
     document.getElementById('prestion_framerate_graph').appendChild(graph.canvas)
@@ -106,7 +101,7 @@ export default class PrestionTools extends Plugin {
     this.engine.app.ticker.add(() => graph.update())
   }
 
-  createMemoryGraph() {
+  createMemoryGraph () {
     const graph = new MemoryGraph()
     graph.load()
     document.getElementById('prestion_memory_graph').appendChild(graph.canvas)
@@ -114,11 +109,11 @@ export default class PrestionTools extends Plugin {
     this.engine.app.ticker.add(() => graph.update())
   }
 
-  getReplaceableElement(data) {
+  getReplaceableElement (data) {
     return this.element.querySelector(`[data-prestion-replace="${data}"]`)
   }
 
-  updateSlideData() {
+  updateSlideData () {
     const currentSlide = this.getReplaceableElement('current_slide')
     const slideNumber = this.getReplaceableElement('slide_number')
 
@@ -133,7 +128,6 @@ export default class PrestionTools extends Plugin {
       nextBtn.disabled = true
     }
 
-
     slideNumber.innerHTML = `${this.engine._currentSlide}/${this.engine.slides.length - 1}`
     currentSlide.innerHTML = this.engine.currentSlide._options.name
   }
@@ -141,7 +135,7 @@ export default class PrestionTools extends Plugin {
   /**
    * @param {Slide} slide
    */
-  createStates(slide) {
+  createStates (slide) {
     const statesElement = this.getReplaceableElement('slide_state')
     statesElement.innerHTML = ''
 
@@ -150,7 +144,7 @@ export default class PrestionTools extends Plugin {
     this.statesSlide = slide._options.id
   }
 
-  createGlobalStates() {
+  createGlobalStates () {
     const statesElement = this.getReplaceableElement('global_state')
 
     this.buildStates(statesElement, this.engine, () => this.engine.onGlobalStateUpdate())
@@ -162,8 +156,8 @@ export default class PrestionTools extends Plugin {
    * @param {Slide|PrestionProject} stateHolder
    * @param {Function} fn - The function to run after the state is changed
    */
-  buildStates(element, stateHolder, fn) {
-    for (let [k, v] of Object.entries(stateHolder.stateTypes)) {
+  buildStates (element, stateHolder, fn) {
+    for (const [k, v] of Object.entries(stateHolder.stateTypes)) {
       const defaultValue = stateHolder.state[k]
       element.insertAdjacentHTML('beforeend', StateInput(stateHolder, k, v, defaultValue))
 
@@ -177,13 +171,13 @@ export default class PrestionTools extends Plugin {
         wrapper.addEventListener('drop', async ev => {
           ev.preventDefault()
           try {
-            const {dataTransfer} = ev
+            const { dataTransfer } = ev
             const file = dataTransfer.files[0]
             let img
             if (file) {
               stateHolder.state[k] = await this.fileToImage(file)
             } else {
-              stateHolder.state[k] = await PUtils.loadImage(dataTransfer.getData("url"))
+              stateHolder.state[k] = await PUtils.loadImage(dataTransfer.getData('url'))
             }
             fn()
           } catch (e) {
@@ -191,7 +185,6 @@ export default class PrestionTools extends Plugin {
           } finally {
             wrapper.classList.remove('dragging')
           }
-
         })
 
         wrapper.addEventListener('dragover', ev => {
@@ -212,11 +205,10 @@ export default class PrestionTools extends Plugin {
           fn()
         }
       }
-
     }
   }
 
-  onTransition() {
+  onTransition () {
     this.updateSlideData()
     this.createStates(this.engine.currentSlide)
 
@@ -225,7 +217,7 @@ export default class PrestionTools extends Plugin {
     }
   }
 
-  onCanMoveValueChange() {
+  onCanMoveValueChange () {
     this.updateSlideData()
   }
 
@@ -233,14 +225,14 @@ export default class PrestionTools extends Plugin {
    * Event triggered when the slide's state is changed by itself
    * @param {Slide} slide
    */
-  onStateUpdate(slide) {
+  onStateUpdate (slide) {
     if (this.statesSlide !== slide._options.id) return
     const statesElement = this.getReplaceableElement('slide_state')
 
     this.updateElementStates(statesElement, slide)
   }
 
-  onGlobalStateUpdate() {
+  onGlobalStateUpdate () {
     const statesElement = this.getReplaceableElement('global_state')
     this.updateElementStates(statesElement, this.engine)
   }
@@ -250,8 +242,8 @@ export default class PrestionTools extends Plugin {
    * @param {HTMLElement} statesElement
    * @param {Slide|PrestionProject} stateHolder
    */
-  updateElementStates(statesElement, stateHolder) {
-    for (let [k, v] of Object.entries(stateHolder.stateTypes)) {
+  updateElementStates (statesElement, stateHolder) {
+    for (const [k, v] of Object.entries(stateHolder.stateTypes)) {
       const el = statesElement.querySelector(`[data-prestion-state="${k}"]`)
       if (!el) continue
       const input = statesElement.querySelector(`[data-prestion-state-input="${k}"]`)
@@ -284,9 +276,9 @@ export default class PrestionTools extends Plugin {
    * @param {Slide|PrestionProject} stateHolder
    * @returns Object
    */
-  getCleanedStateClone(stateHolder) {
+  getCleanedStateClone (stateHolder) {
     const clone = {}
-    for (let [key, type] of Object.entries(stateHolder.stateTypes)) {
+    for (const [key, type] of Object.entries(stateHolder.stateTypes)) {
       const value = stateHolder.state[key]
       if (stateHolder._defaultState[key] === value) continue
 
@@ -301,11 +293,11 @@ export default class PrestionTools extends Plugin {
     return clone
   }
 
-  handleSavedData() {
-    function setStates(stateHolder, states) {
+  handleSavedData () {
+    function setStates (stateHolder, states) {
       if (states) {
         const obj = JSON.parse(states)
-        for (let [k, [type, value]] of Object.entries(obj)) {
+        for (const [k, [type, value]] of Object.entries(obj)) {
           if (type !== stateHolder.stateTypes[k]) continue
 
           if (type === 'image') {
@@ -323,13 +315,13 @@ export default class PrestionTools extends Plugin {
     const globalState = localStorage.getItem(`${this.stateStorageKey}_GLOBAL_STATE`)
     setStates(this.engine, globalState)
 
-    for (let slide of this.engine.slides) {
+    for (const slide of this.engine.slides) {
       const state = localStorage.getItem(`${this.stateStorageKey}_SLIDE_${slide.id}`)
       setStates(slide, state)
     }
   }
 
-  saveStates() {
+  saveStates () {
     if (!this.settings.keepData) return
 
     localStorage.setItem(`${this.stateStorageKey}_SLIDE`, this.engine.currentSlide.id)
@@ -342,19 +334,18 @@ export default class PrestionTools extends Plugin {
 
     const key = `${this.stateStorageKey}_SLIDE_${this.engine.currentSlide.id}`
     localStorage.setItem(key, JSON.stringify(slideCleanClone))
-
   }
 
-  removeSavedData() {
+  removeSavedData () {
     localStorage.removeItem(`${this.stateStorageKey}_GLOBAL_STATE`)
     localStorage.removeItem(`${this.stateStorageKey}_SLIDE`)
 
-    for (let slide of this.engine.slides) {
+    for (const slide of this.engine.slides) {
       localStorage.removeItem(`${this.stateStorageKey}_SLIDE_${slide.id}`)
     }
   }
 
-  fileToImage(file) {
+  fileToImage (file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => {

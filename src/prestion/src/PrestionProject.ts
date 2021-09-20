@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
 import gsap from 'gsap'
-import { version } from '../package.json'
 import { PluginConstructor, PrestionProjectConfig, PrestionProjectConfigOptionals, SlideConstructor, StateObject, StateTypeAsString } from './typings'
 import { Plugin, Slide } from '.'
 
@@ -16,6 +15,7 @@ export default class PrestionProject<G extends StateObject = StateObject> {
   public readonly config: PrestionProjectConfig
   public readonly name: string
   public readonly element: HTMLElement
+  public readonly version: string
   public resources: Record<string, unknown> | null
 
   public readonly slides: Slide<PrestionProject>[]
@@ -37,6 +37,8 @@ export default class PrestionProject<G extends StateObject = StateObject> {
   constructor (config: PrestionProjectConfigOptionals = {}) {
     this.config = { ...defaultConfig, ...config }
     this.name = this.config.name
+
+    this.version = '2.0.0'
 
     const element = config.element
     if (typeof element === 'string') {
@@ -192,6 +194,19 @@ export default class PrestionProject<G extends StateObject = StateObject> {
     this.triggerSlideEvent('onWindowResize', width, height)
   }
 
+  onWheelEvent (event: WheelEvent) {
+    if (!this.canMove) return
+    try {
+      if (event.deltaY > 0) {
+        this.next()
+      } else {
+        this.back()
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   /* Methods */
   addSlides (...slides: SlideConstructor<PrestionProject>[]) {
     for (let i = 0; i < slides.length; i++) {
@@ -255,11 +270,15 @@ export default class PrestionProject<G extends StateObject = StateObject> {
     window.addEventListener('resize', () => {
       this.onWindowResize(window.innerWidth, window.innerHeight)
     })
+
+    window.addEventListener('wheel', event => {
+      this.onWheelEvent(event)
+    })
   }
 
   start () {
     console.log(
-      `%c %c Prestion engine ${version} %c `,
+      `%c %c Prestion engine ${this.version} %c `,
       'background: #fe4195; padding-left: 4px',
       'background: linear-gradient(90deg, #fdaf67, #b851e3); color: white; font-family: monospace',
       'background: #26dce2; padding-left: 4px'
@@ -310,7 +329,7 @@ export default class PrestionProject<G extends StateObject = StateObject> {
     this.canMove = false
     const { previousSlide, currentSlide } = this
 
-    if (!previousSlide) throw new Error('No previous slide')
+    if (!previousSlide) return
 
     this.triggerPluginEvent('onPreBackSlide', previousSlide)
 
@@ -327,7 +346,9 @@ export default class PrestionProject<G extends StateObject = StateObject> {
         currentSlide.visible = false
         currentSlide.onEnd()
         previousSlide.onStart()
-        this.canMove = true
+        setTimeout(() => {
+          this.canMove = true
+        }, 400)
       }
     })
 
@@ -351,7 +372,7 @@ export default class PrestionProject<G extends StateObject = StateObject> {
     this.canMove = false
     const { currentSlide, nextSlide } = this
 
-    if (!nextSlide) throw new Error('No previous slide')
+    if (!nextSlide) return
 
     this.triggerPluginEvent('onPreNextSlide', nextSlide)
 
@@ -368,7 +389,9 @@ export default class PrestionProject<G extends StateObject = StateObject> {
         currentSlide.visible = false
         currentSlide.onEnd()
         nextSlide.onStart()
-        this.canMove = true
+        setTimeout(() => {
+          this.canMove = true
+        }, 400)
       }
     })
 

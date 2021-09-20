@@ -1,5 +1,5 @@
 import { PrestionProject, PrestionUtils, StateObject } from "@musicorum/prestion"
-import {PrestionTools} from "@musicorum/prestion-tools"
+import {PrestionToolkit} from "@musicorum/prestion-tools"
 import IntroSlide from "./slides/intro"
 import SecondSlide from "./slides/second"
 import * as PIXI from 'pixi.js'
@@ -31,7 +31,7 @@ export default class ExampleProject extends PrestionProject<ExampleProjectState>
     }
 
     this.addPlugins(
-      PrestionTools
+      PrestionToolkit
     )
 
     this.addSlides(
