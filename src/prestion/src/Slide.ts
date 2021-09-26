@@ -11,20 +11,23 @@ export default class Slide<
   public readonly container: PIXI.Container
   public readonly index: number
 
+  public name: string
+
   private _state?: Record<string, unknown>
   private _cachedState?: Record<string, unknown>
   private _stateDefined: boolean
   public _defaultState?: Record<string, unknown>
   public stateTypes: Record<keyof S, StateTypeAsString>
 
-  private readonly _options: SlideOptions
+  private readonly options: SlideOptions
 
   constructor (
     { prestion, index }: SlideInsideOptions<P>,
     options: SlideOptions
   ) {
     this.engine = prestion
-    this._options = options
+    this.options = options
+    this.name = options.name
 
     this.container = new PIXI.Container()
     this.container.name = `Slide - ${options.id}`
@@ -44,7 +47,7 @@ export default class Slide<
   }
 
   get id () {
-    return this._options.id
+    return this.options.id
   }
 
   /**

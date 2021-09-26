@@ -16,7 +16,8 @@
       "@typescript-eslint/explicit-module-boundary-types": "off"
   },
   "plugins": [
-      "@typescript-eslint"
+      "@typescript-eslint",
+      "@emotion"
   ],
   "parser": "@typescript-eslint/parser"
 }

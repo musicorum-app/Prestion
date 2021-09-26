@@ -57,4 +57,8 @@ export default class Plugin<P extends PrestionProject> {
   onCanMoveValueChange () {
     // Can move value change event
   }
+
+  onDispose () {
+    // Dipose event
+  }
 }

@@ -3,19 +3,21 @@
     [
       "@babel/preset-env",
       {
-        "useBuiltIns": "usage",
         "debug": true
+      }
+    ],
+    [
+      "@babel/preset-typescript",
+      {
+        "isTSX": true,
+        "allExtensions": true,
+        "jsxPragma": "h",
+        "jsxPragmaFrag": "Fragment"
       }
     ]
   ],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
-    [
-      "@babel/plugin-transform-react-jsx",
-      {
-        "pragma": "h",
-        "pragmaFrag": "Fragment"
-      }
-    ]
+    "@babel/plugin-transform-react-jsx"
   ]
 }

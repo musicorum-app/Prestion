@@ -1,3 +1,4 @@
+import { PrestionProject } from '@musicorum/prestion';
 import React, { useEffect } from 'react';
 import ExampleProject from './prestion/project';
 
@@ -13,6 +14,10 @@ function App() {
     }
     
     document.querySelectorAll('canvas, .prestion_tools').forEach(e => e.remove())
+    if ('prestion' in window) {
+      // @ts-ignore
+      (window.prestion as PrestionProject).dispose()
+    }
     
     const prestion = new ExampleProject()
     

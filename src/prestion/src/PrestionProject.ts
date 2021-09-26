@@ -408,4 +408,9 @@ export default class PrestionProject<G extends StateObject = StateObject> {
 
     tl.play()
   }
+
+  dispose () {
+    this.app.destroy(true)
+    this.triggerPluginEvent('onDispose')
+  }
 }
