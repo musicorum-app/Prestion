@@ -1,8 +1,10 @@
 import { Plugin, PrestionProject } from '@musicorum/prestion'
-import { Pane } from 'tweakpane'
+import { BladeApi, FolderApi, FolderParams, InputBindingApi, Pane } from 'tweakpane'
 import { renderToolkit } from './components/Toolkit'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
 import { TweakPaneFpsGraphController } from './types'
+import { StateScope } from './StateScope'
+import { InputBinding } from '@tweakpane/core/dist/cjs/common/binding/input'
 
 export default class PrestionToolkit extends Plugin<PrestionProject> {
   private stateSaveInterval = 10E3 // 10 seconds
@@ -10,9 +12,14 @@ export default class PrestionToolkit extends Plugin<PrestionProject> {
   private stateStorageKey: string
   private storageKeyPrefix = '__PRESTKIT_'
 
-  public mainPane: Pane | null = null
-  public statesPane: Pane | null = null
   public element: HTMLDivElement
+  private mainPane: Pane | null = null
+  private statesPane: Pane | null = null
+  public globalStatesFolder: FolderApi | null = null
+
+  private slideStatesFolders: Map<string, FolderApi> = new Map()
+
+  public keepState = false
 
   constructor (props: PrestionProject) {
     super(props)
@@ -22,7 +29,7 @@ export default class PrestionToolkit extends Plugin<PrestionProject> {
     this.element = document.createElement('div')
   }
 
-  onStart () {
+  onPreLoad () {
     console.log('Starting PrestionToolkit')
     // this.createPane()
 
@@ -91,6 +98,34 @@ export default class PrestionToolkit extends Plugin<PrestionProject> {
       container: element,
       title: 'States'
     })
+
+    this.globalStatesFolder = this.statesPane.addFolder({
+      title: 'Global states'
+    })
+
+    for (const slide of this.engine.slides) {
+      this.slideStatesFolders.set(slide.id, this.createLevitatingFolder({
+        title: slide.name
+      }))
+    }
+  }
+
+  createLevitatingFolder (params: FolderParams): FolderApi {
+    const el = document.createElement('div')
+    const pane = new Pane({
+      container: el
+    })
+
+    const folder = pane.addFolder(params)
+    pane.remove(folder)
+    pane.dispose()
+    el.remove()
+    return folder
+  }
+
+  bindGlobalStateValue (blade: InputBindingApi<unknown, unknown>) {
+    // blade.on('change')
+
   }
 
   private registerPanePlugins (pane: Pane) {
@@ -98,12 +133,7 @@ export default class PrestionToolkit extends Plugin<PrestionProject> {
   }
 
   onDispose () {
-    if (this.mainPane) {
-      this.mainPane.dispose()
-    }
-
-    if (this.statesPane) {
-      this.statesPane.dispose()
-    }
+    this.mainPane?.dispose()
+    this.statesPane?.dispose()
   }
 }
