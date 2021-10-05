@@ -54,6 +54,17 @@ export default class ExampleProject extends PrestionProject<ExampleProjectState>
     this.updateBackgroundColor()
   }
 
+  onStart () {
+    const a = {
+      oi: 20
+    }
+
+    const toolkit = this.plugins.get('PrestionToolkit') as PrestionToolkit
+    toolkit.bindGlobalStateValue (a, 'oi', {
+      max: 20
+    })
+  }
+
   updateBackgroundColor() {
     const [width, height] = PrestionUtils.getWindowSize()
 

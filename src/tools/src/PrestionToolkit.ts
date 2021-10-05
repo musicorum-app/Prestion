@@ -31,6 +31,7 @@ export default class PrestionToolkit extends Plugin<PrestionProject> {
 
   onPreLoad () {
     console.log('Starting PrestionToolkit')
+    this.createStatesPane(this.element)
     // this.createPane()
 
     this.element.style.position = 'fixed'
@@ -123,9 +124,11 @@ export default class PrestionToolkit extends Plugin<PrestionProject> {
     return folder
   }
 
-  bindGlobalStateValue (blade: InputBindingApi<unknown, unknown>) {
-    // blade.on('change')
-
+  bindGlobalStateValue (holder: Record<string, unknown>, key: string, options: Record<string, unknown>) {
+    this.globalStatesFolder?.addInput(holder, key, options)
+      .on('change', (value) => {
+        console.log(value)
+      })
   }
 
   private registerPanePlugins (pane: Pane) {

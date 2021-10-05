@@ -35,5 +35,8 @@
   "dependencies": {
     "gsap": "^3.7.1",
     "pixi.js": "^6.1.2"
+  },
+  "optionalDependencies": {
+    "tweakpane": "^3.0.5"
   }
 }
