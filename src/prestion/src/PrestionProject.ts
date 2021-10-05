@@ -290,6 +290,7 @@ export default class PrestionProject<G extends StateObject = StateObject> {
 
     this.startStates()
 
+    this.onStart()
     this.triggerPluginEvent('onStart')
 
     this.currentSlide.visible = true
@@ -302,6 +303,10 @@ export default class PrestionProject<G extends StateObject = StateObject> {
     })
 
     this.currentSlide.createStartTimeline(tl)
+  }
+
+  onStart () {
+    // Start event
   }
 
   startStates () {
